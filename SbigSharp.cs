@@ -457,17 +457,17 @@ namespace SbigSharp
         {
             public bool cameraFound;
             public CameraType cameraType;
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst=64)]
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst=64)]
             public string name;
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst=10)]
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst=10)]
             public string serialNumber;
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 8)]
-        public struct QueryUsbResults
+        public class QueryUsbResults
         {
             public ushort camerasFound;
-            [MarshalAs(UnmanagedType.LPArray, SizeConst=8)]
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst=8)]
             public UsbInfo[] dev;
         }
 
@@ -675,6 +675,45 @@ namespace SbigSharp
 
             return Results;
         }
+
+        /// <summary>
+        /// calls UnivDrvCommand while (possibly taking in, but definitely) marshalling out a complex struct
+        /// (defined as a non-primitive or non-blittable type, like an array)
+        /// </summary>
+        /// <param name="Command"></param>
+        /// <param name="Parameters"></param>
+        /// <param name="Results"></param>
+        public static void UnivDrvCommand_OutComplex(Cmd Command, object Parameters, object Results)
+        {
+            // marshall the input structure, if it exists
+            IntPtr ParamPtr = IntPtr.Zero;
+            GCHandle ParamGch = GCHandle.Alloc(Command);
+            if (null != Parameters)
+            {
+                ParamGch = GCHandle.Alloc(Parameters, GCHandleType.Pinned);
+                ParamPtr = ParamGch.AddrOfPinnedObject();
+            }
+            // translate the struct into bytes, which are pinned
+            IntPtr ResultsPtr = Marshal.AllocHGlobal(Marshal.SizeOf(Results));
+            // pass true to free up any incoming memory, since we're going to overwrite it
+            Marshal.StructureToPtr(Results, ResultsPtr, true);
+
+            //
+            // make the call
+            //
+            Error err = SBIGUnivDrvCommand(Command, ParamPtr, ResultsPtr);
+            if (Error.CE_NO_ERROR != err)
+                throw new FailedOperation(err);
+
+            // Marshall back
+            Marshal.PtrToStructure(ResultsPtr, Results);
+
+            // clean up
+            Marshal.FreeHGlobal(ResultsPtr);
+            if (IntPtr.Zero != ParamPtr)
+                ParamGch.Free();
+        }
+
 
         //
         // Exposure helpers
