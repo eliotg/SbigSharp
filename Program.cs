@@ -13,7 +13,9 @@ namespace SbigSharp
             //
             SBIG.UnivDrvCommand(SBIG.Cmd.CC_OPEN_DRIVER, null);
 
-            SBIG.QueryUsbResults qur = SBIG.UnivDrvCommand<SBIG.QueryUsbResults>(SBIG.Cmd.CC_QUERY_USB, null);
+            // ask the SBIG driver what, if any, USB cameras are plugged in
+            SBIG.QueryUsbResults qur = new SBIG.QueryUsbResults();
+            SBIG.UnivDrvCommand_OutComplex(SBIG.Cmd.CC_QUERY_USB, null, qur);
             for (int i = 0; i < qur.camerasFound; i++)
             {
                 if (!qur.dev[i].cameraFound)
