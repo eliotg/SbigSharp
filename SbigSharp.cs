@@ -196,6 +196,17 @@ namespace SbigSharp
             ExternalTrackingInStxOrStl = 2
         }
 
+        public enum CcdInfoRequest : ushort
+        {
+            ImagingCcdStandard = 0,
+            TrackingCcdStandard,
+            CameraInfoExtended,
+            PixCel255_237Extended,
+            ImagingCcdSecondaryExtended,
+            TrackingCcdSecondaryExtended,
+            CcdCameraExtended
+        }
+
         public enum AbgState : ushort
         {
             Off = 0,
@@ -271,6 +282,21 @@ namespace SbigSharp
             TEMP_STATUS_STANDARD,
             TEMP_STATUS_ADVANCED,
             TEMP_STATUS_ADVANCED2
+        }
+
+        public enum A2dSize : ushort
+        {
+            Unknown = 0,
+            TwelveBits = 1,
+            SixteenBits = 2
+        }
+
+        public enum FilterType : ushort
+        {
+            Unknown = 0,
+            External = 1,
+            TwoPosition = 2,
+            FivePosition = 3
         }
         
         #endregion Enums
@@ -469,6 +495,84 @@ namespace SbigSharp
             public ushort camerasFound;
             [MarshalAs(UnmanagedType.ByValArray, SizeConst=8)]
             public UsbInfo[] dev;
+        }
+
+
+        [StructLayout(LayoutKind.Sequential, Pack = 8)]
+        public class GetCcdInfoParams
+        {
+            CcdInfoRequest req;
+        }
+
+        [StructLayout(LayoutKind.Sequential, Pack = 8)]
+        public struct ReadoutInfo
+        {
+            ushort mode;
+            ushort width;
+            ushort height;
+            ushort gain;        // amplifier gain in e-/ADU, e.g. 0x1234 = 12.34 e- per ADU
+            ulong pixelWidth;   // pixel width in microns in the form XXXXXX.XX
+            ulong pixelHeight;  // pixel height in microns in the form XXXXXX.XX
+        }
+
+        /// <summary>
+        /// Result structure for CC_GET_CCD_INFO request types 0 and 1
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential, Pack = 8)]
+        public class GetCcdInfoResults01
+        {
+            ushort firmwareVersion; // 0x1234 = v12.34
+            CameraType cameraType;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
+            string name;
+            ushort readoutModeCount;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 20)]
+            ReadoutInfo[] readoutInfo;
+        }
+
+        /// <summary>
+        /// Result structure for CC_GET_CCD_INFO request type 2
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential, Pack = 8)]
+        public class GetCcdInfoResults2
+        {
+            ushort badColumns;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+            ushort[] columns;
+            ushort imagingABG; // 0 = no ABG, 1 = Anti-Blooming Gate protection
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 10)]
+            char[] serialNumber;
+        }
+
+        /// <summary>
+        /// Result structure for CC_GET_CCD_INFO request type 3
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential, Pack = 8)]
+        public class GetCcdInfoResults3
+        {
+            A2dSize a2dSize;
+            FilterType filterType;
+        }
+
+        /// <summary>
+        /// Result structure for CC_GET_CCD_INFO request type 4 and 5
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential, Pack = 8)]
+        public class GetCcdInfoResults45
+        {
+            ushort capabilitiesBits;
+            ushort dumpExtra;
+        }
+
+        /// <summary>
+        /// Result structure for CC_GET_CCD_INFO request type 6
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential, Pack = 8)]
+        public class GetCcdInfoResults6
+        {
+            ulong cameraBits;
+            ulong ccdBits;
+            ulong extraBits;
         }
 
 
