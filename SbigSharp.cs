@@ -304,9 +304,9 @@ namespace SbigSharp
             NoBinning = 0,
             Bin2x2 = 1,
             Bin3x3 = 2,
-            BinNx1 = 3, // N specified in high byte
-            BinNx2 = 4, // N specified in high byte
-            BinNx3 = 5, // N specified in high byte
+            BinNx1 = 3, // N pixels of vertical binning, specified in high byte
+            BinNx2 = 4, // N pixels of vertical binning, specified in high byte
+            BinNx3 = 5, // N pixels of vertical binning, specified in high byte
             NoBinning2 = 6,
             Bin2x2VertOffChip = 7,
             Bin3x3VertOffChip = 8,
