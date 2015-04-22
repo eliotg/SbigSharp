@@ -298,6 +298,21 @@ namespace SbigSharp
             TwoPosition = 2,
             FivePosition = 3
         }
+
+        public enum ReadoutMode : ushort
+        {
+            NoBinning = 0,
+            Bin2x2 = 1,
+            Bin3x3 = 2,
+            BinNx1 = 3, // N specified in high byte
+            BinNx2 = 4, // N specified in high byte
+            BinNx3 = 5, // N specified in high byte
+            NoBinning2 = 6,
+            Bin2x2VertOffChip = 7,
+            Bin3x3VertOffChip = 8,
+            Bin9x9 = 9,
+            BinNxN = 10, // N specified in high byte, STF-8300 only
+        }
         
         #endregion Enums
 
@@ -350,6 +365,11 @@ namespace SbigSharp
             public ushort readoutMode;
             public ushort pixelStart;
             public ushort pixelLength;
+
+            public static ushort MakeNBinMode(ReadoutMode rlp, ushort n)
+            {
+                return (ushort)(((ushort)rlp) | (n << 8));
+            }
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 8)]
