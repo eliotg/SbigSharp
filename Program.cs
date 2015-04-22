@@ -74,7 +74,7 @@ namespace SbigSharp
             rlp.ccd = SBIG.CCD.Imaging;
             rlp.pixelStart = 0;
             rlp.pixelLength = 1530;
-            rlp.readoutMode = 1027;
+            rlp.readoutMode = SBIG.ReadoutLineParams.MakeNBinMode(SBIG.ReadoutMode.BinNx1, 4);
             // output
             ushort[] data = new ushort[rlp.pixelLength];
             // make the call!!!
