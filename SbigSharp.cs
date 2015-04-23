@@ -313,6 +313,12 @@ namespace SbigSharp
             Bin9x9 = 9,
             BinNxN = 10, // N specified in high byte, STF-8300 only
         }
+
+        public enum AntiBloomingGatePresence : ushort
+        {
+            NoABG = 0,
+            HasABG = 1
+        }
         
         #endregion Enums
 
@@ -521,18 +527,23 @@ namespace SbigSharp
         [StructLayout(LayoutKind.Sequential, Pack = 8)]
         public class GetCcdInfoParams
         {
-            CcdInfoRequest req;
+            public CcdInfoRequest req;
+
+            public GetCcdInfoParams(CcdInfoRequest req)
+            {
+                this.req = req;
+            }
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 8)]
         public struct ReadoutInfo
         {
-            ushort mode;
-            ushort width;
-            ushort height;
-            ushort gain;        // amplifier gain in e-/ADU, e.g. 0x1234 = 12.34 e- per ADU
-            ulong pixelWidth;   // pixel width in microns in the form XXXXXX.XX
-            ulong pixelHeight;  // pixel height in microns in the form XXXXXX.XX
+            public ushort mode;
+            public ushort width;
+            public ushort height;
+            public ushort gain;        // amplifier gain in e-/ADU, e.g. 0x1234 = 12.34 e- per ADU
+            public ulong pixelWidth;   // pixel width in microns in the form XXXXXX.XX
+            public ulong pixelHeight;  // pixel height in microns in the form XXXXXX.XX
         }
 
         /// <summary>
@@ -541,13 +552,13 @@ namespace SbigSharp
         [StructLayout(LayoutKind.Sequential, Pack = 8)]
         public class GetCcdInfoResults01
         {
-            ushort firmwareVersion; // 0x1234 = v12.34
-            CameraType cameraType;
+            public ushort firmwareVersion; // 0x1234 = v12.34
+            public CameraType cameraType;
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
-            string name;
-            ushort readoutModeCount;
+            public string name;
+            public ushort readoutModeCount;
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 20)]
-            ReadoutInfo[] readoutInfo;
+            public ReadoutInfo[] readoutInfo;
         }
 
         /// <summary>
@@ -556,12 +567,12 @@ namespace SbigSharp
         [StructLayout(LayoutKind.Sequential, Pack = 8)]
         public class GetCcdInfoResults2
         {
-            ushort badColumns;
+            public ushort badColumns;
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-            ushort[] columns;
-            ushort imagingABG; // 0 = no ABG, 1 = Anti-Blooming Gate protection
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 10)]
-            char[] serialNumber;
+            public ushort[] columns;
+            public AntiBloomingGatePresence imagingABG; // 0 = no ABG, 1 = Anti-Blooming Gate protection
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 10)]
+            public string serialNumber;
         }
 
         /// <summary>
@@ -570,8 +581,8 @@ namespace SbigSharp
         [StructLayout(LayoutKind.Sequential, Pack = 8)]
         public class GetCcdInfoResults3
         {
-            A2dSize a2dSize;
-            FilterType filterType;
+            public A2dSize a2dSize;
+            public FilterType filterType;
         }
 
         /// <summary>
@@ -580,8 +591,8 @@ namespace SbigSharp
         [StructLayout(LayoutKind.Sequential, Pack = 8)]
         public class GetCcdInfoResults45
         {
-            ushort capabilitiesBits;
-            ushort dumpExtra;
+            public ushort capabilitiesBits;
+            public ushort dumpExtra;
         }
 
         /// <summary>
@@ -590,9 +601,9 @@ namespace SbigSharp
         [StructLayout(LayoutKind.Sequential, Pack = 8)]
         public class GetCcdInfoResults6
         {
-            ulong cameraBits;
-            ulong ccdBits;
-            ulong extraBits;
+            public ulong cameraBits;
+            public ulong ccdBits;
+            public ulong extraBits;
         }
 
 

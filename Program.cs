@@ -8,9 +8,7 @@ namespace SbigSharp
     {
         static void Main(string[] args)
         {
-            //
-            // connect to the camera
-            //
+            // initialize the driver
             SBIG.UnivDrvCommand(SBIG.Cmd.CC_OPEN_DRIVER, null);
 
             // ask the SBIG driver what, if any, USB cameras are plugged in
@@ -24,9 +22,42 @@ namespace SbigSharp
                     Console.WriteLine(String.Format("Cam {0}: type={1} name={2} ser={3}", i, qur.dev[i].cameraType, qur.dev[i].name, qur.dev[i].serialNumber));
             }
 
+            //
+            // connect to the camera
+            //
             SBIG.UnivDrvCommand(SBIG.Cmd.CC_OPEN_DEVICE, new SBIG.OpenDeviceParams("127.0.0.1"));
             SBIG.CameraType ct = SBIG.EstablishLink();
 
+
+            // query camera info
+            SBIG.GetCcdInfoResults01 gcir0 = new SBIG.GetCcdInfoResults01();
+            SBIG.UnivDrvCommand_OutComplex(SBIG.Cmd.CC_GET_CCD_INFO,
+                                           new SBIG.GetCcdInfoParams(SBIG.CcdInfoRequest.ImagingCcdStandard),
+                                           gcir0);
+            // now print it out
+            Console.WriteLine("Firmware version: " + (gcir0.firmwareVersion >> 8) + "." + (gcir0.firmwareVersion & 0xFF));
+            Console.WriteLine("Camera type: " + gcir0.cameraType.ToString());
+            Console.WriteLine("Camera name: " + gcir0.name);
+            Console.WriteLine("Readout modes: " + gcir0.readoutModeCount);
+            for (int i = 0; i < gcir0.readoutModeCount; i++)
+            {
+                SBIG.ReadoutInfo ri = gcir0.readoutInfo[i];
+                Console.WriteLine(" Readout mode: " + ri.mode);
+                Console.WriteLine("  Width: " + ri.width);
+                Console.WriteLine("  Height: " + ri.height);
+                Console.WriteLine("  Gain: " + (ri.gain >> 8) + "." + (ri.gain & 0xFF) + " e-/ADU");
+            }
+
+            // get extended info
+            SBIG.GetCcdInfoResults2 gcir2 = new SBIG.GetCcdInfoResults2();
+            SBIG.UnivDrvCommand_OutComplex(SBIG.Cmd.CC_GET_CCD_INFO,
+                                           new SBIG.GetCcdInfoParams(SBIG.CcdInfoRequest.CameraInfoExtended),
+                                           gcir2);
+            // print it out
+            Console.Write("Bad columns: " + gcir2.badColumns + " = ");
+            Console.WriteLine(gcir2.columns[0] + ", " + gcir2.columns[1] + ", " + gcir2.columns[2] + ", " + gcir2.columns[3]);
+            Console.WriteLine("ABG: " + gcir2.imagingABG.ToString());
+            Console.WriteLine("Serial number: " + gcir2.serialNumber);
 
             // query temperature
             SBIG.QueryTemperatureStatusParams qtsp = new SBIG.QueryTemperatureStatusParams(SBIG.TempStatusRequest.TEMP_STATUS_ADVANCED2);
