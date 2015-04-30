@@ -241,7 +241,8 @@ namespace SbigSharp
             ST_4K,
             STT,
             ST_i,
-            STF_8300
+            STF_8300,
+            NoCamera = 0xFFFF
         }
 
         public enum LedState : ushort
