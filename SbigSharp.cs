@@ -508,7 +508,8 @@ namespace SbigSharp
         [StructLayout(LayoutKind.Sequential, Pack = 8)]
         public struct UsbInfo
         {
-            public bool cameraFound;
+            public ushort cameraFound;
+            public bool CameraFound { get { return 0 != cameraFound; } }
             public CameraType cameraType;
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst=64)]
             public string name;
