@@ -218,8 +218,11 @@ namespace SbigSharp
         public enum ShutterState : ushort
         {
             Unchanged = 0,
-            OpenForExposureCloseForReadout,
-            CloseForExposureAndReadout
+            Open,
+            Close,
+            Reinitialize,
+            OpenStlExternal,
+            CloseStlExternal
         }
 
         public enum CameraType : ushort
@@ -375,7 +378,11 @@ namespace SbigSharp
 
             public static ushort MakeNBinMode(ReadoutMode rlp, ushort n)
             {
-                return (ushort)(((ushort)rlp) | (n << 8));
+                // put the high byte in place, but only if it's one of those binning modes
+                if (ReadoutMode.BinNx1 == rlp || ReadoutMode.BinNx2 == rlp || ReadoutMode.BinNx3 == rlp || ReadoutMode.BinNxN == rlp)
+                    return (ushort)(((ushort)rlp) | (n << 8));
+                else
+                    return (ushort)rlp;
             }
         }
 
@@ -490,7 +497,7 @@ namespace SbigSharp
         public class SetDriverControlParams
         {
             public DriverControlParam controlParameter;
-            public uint controlValue;
+            public int controlValue;
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 8)]
