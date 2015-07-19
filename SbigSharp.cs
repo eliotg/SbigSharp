@@ -615,6 +615,18 @@ namespace SbigSharp
             public ulong extraBits;
         }
 
+        /// <summary>
+        /// Input structure for CC_ACTIVATE_RELAY command to control telescope mount
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential, Pack = 8)]
+        public class ActivateRelayParams
+        {
+            public ushort tXPlus;
+            public ushort tXMinus;
+            public ushort tYPlus;
+            public ushort tYMinus;
+        }
+
 
         /// <summary>
         /// gets thrown whenever an SBIG operation doesn't return success (CE_NO_ERROR)
