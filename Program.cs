@@ -16,7 +16,7 @@ namespace SbigSharp
             SBIG.UnivDrvCommand_OutComplex(SBIG.Cmd.CC_QUERY_USB, null, qur);
             for (int i = 0; i < qur.camerasFound; i++)
             {
-                if (!qur.dev[i].cameraFound)
+                if (0 == qur.dev[i].cameraFound)
                     Console.WriteLine("Cam " + i + ": not found");
                 else
                     Console.WriteLine(String.Format("Cam {0}: type={1} name={2} ser={3}", i, qur.dev[i].cameraType, qur.dev[i].name, qur.dev[i].serialNumber));
@@ -88,7 +88,7 @@ namespace SbigSharp
             SBIG.MiscellaneousControlParams mcp = new SBIG.MiscellaneousControlParams();
             mcp.fanEnable = 1;
             mcp.ledState = SBIG.LedState.BlinkHigh;
-            mcp.shutterCommand = SBIG.ShutterState.OpenForExposureCloseForReadout;
+            mcp.shutterCommand = SBIG.ShutterState.Open;
             SBIG.UnivDrvCommand(SBIG.Cmd.CC_MISCELLANEOUS_CONTROL, mcp);
 
             // turn off pipelining for USB connected cameras
