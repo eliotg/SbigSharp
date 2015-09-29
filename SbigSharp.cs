@@ -323,6 +323,17 @@ namespace SbigSharp
             NoABG = 0,
             HasABG = 1
         }
+
+        public enum TemperatureRegulation : short
+        {
+            Off = 0,
+            On,
+            Override,
+            Freeze,
+            Unfreeze,
+            AutoFreeze,
+            DisableAutoFreeze
+        }
         
         #endregion Enums
 
@@ -425,6 +436,26 @@ namespace SbigSharp
             public double fanPower;
             public double fanSpeed;
             public double trackingCCDSetpoint;
+        }
+
+        /// <summary>
+        /// controls the thermoelectric cooler, using old school A2D units (see docs)
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential, Pack = 8)]
+        public class SetTemperatureRegulationParams
+        {
+            public TemperatureRegulation state;
+            public ushort ccdSetpointA2dUnits;
+        }
+
+        /// <summary>
+        /// controls the thermoelectric cooler in nice, simple degrees C
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential, Pack = 8)]
+        public class SetTemperatureRegulationParams2
+        {
+            public TemperatureRegulation state;
+            public double ccdSetpointCelcius;
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 8)]
