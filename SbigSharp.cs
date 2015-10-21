@@ -707,7 +707,6 @@ namespace SbigSharp
         {
             // marshall the input structure, if it exists
             IntPtr ParamPtr = IntPtr.Zero;
-            GCHandle ParamGch = GCHandle.Alloc(Command);
             if (null != Parameters)
             {
                 ParamGch = GCHandle.Alloc(Parameters, GCHandleType.Pinned);
@@ -737,7 +736,6 @@ namespace SbigSharp
         {
             // marshall the input structure, if it exists
             IntPtr ParamPtr = IntPtr.Zero;
-            GCHandle ParamGch = GCHandle.Alloc(Command);
             if (null != Parameters)
             {
                 ParamGch = GCHandle.Alloc(Parameters, GCHandleType.Pinned);
@@ -799,7 +797,6 @@ namespace SbigSharp
         {
             // marshall the input structure, if it exists
             IntPtr ParamPtr = IntPtr.Zero;
-            GCHandle ParamGch = GCHandle.Alloc(Command);
             if (null != Parameters)
             {
                 ParamGch = GCHandle.Alloc(Parameters, GCHandleType.Pinned);
@@ -874,7 +871,6 @@ namespace SbigSharp
         {
             // marshall the input structure, if it exists
             IntPtr ParamPtr = IntPtr.Zero;
-            GCHandle ParamGch = GCHandle.Alloc(Command);
             if (null != Parameters)
             {
                 ParamGch = GCHandle.Alloc(Parameters, GCHandleType.Pinned);
