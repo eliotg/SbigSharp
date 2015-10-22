@@ -10,6 +10,14 @@ namespace SbigSharp
     class SBIG
     {
         //
+        #region Constants
+        //
+
+        private static GCHandle NullGch = new GCHandle();
+
+        #endregion
+
+        //
         #region Enums
         //
 
@@ -706,6 +714,7 @@ namespace SbigSharp
         public static void UnivDrvCommand(Cmd Command, object Parameters)
         {
             // marshall the input structure, if it exists
+            GCHandle ParamGch = NullGch;
             IntPtr ParamPtr = IntPtr.Zero;
             if (null != Parameters)
             {
@@ -735,6 +744,7 @@ namespace SbigSharp
         public static void UnivDrvCommand(Cmd Command, object Parameters, object Results)
         {
             // marshall the input structure, if it exists
+            GCHandle ParamGch = NullGch;
             IntPtr ParamPtr = IntPtr.Zero;
             if (null != Parameters)
             {
@@ -796,6 +806,7 @@ namespace SbigSharp
         public static T UnivDrvCommand<T>(Cmd Command, object Parameters) where T : new()
         {
             // marshall the input structure, if it exists
+            GCHandle ParamGch = NullGch;
             IntPtr ParamPtr = IntPtr.Zero;
             if (null != Parameters)
             {
@@ -870,6 +881,7 @@ namespace SbigSharp
         public static void UnivDrvCommand_OutComplex(Cmd Command, object Parameters, object Results)
         {
             // marshall the input structure, if it exists
+            GCHandle ParamGch = NullGch;
             IntPtr ParamPtr = IntPtr.Zero;
             if (null != Parameters)
             {
